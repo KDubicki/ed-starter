@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useFlightsStore } from '@/store/flightsStore';
 import { StatusControl } from '@/components/admin/StatusControl';
+import { DelayControl } from '@/components/admin/DelayControl';
+import { BulkStatusBar } from '@/components/admin/BulkStatusBar';
 import { FlightEditor } from '@/components/admin/FlightEditor';
 import type { Flight } from '@/types';
 
@@ -10,6 +12,7 @@ export default function AdminPage() {
   const { flights, setFlights, removeFlight, resetFlights } = useFlightsStore();
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   useEffect(() => {
     fetch('/api/flights')
@@ -27,6 +30,12 @@ export default function AdminPage() {
       body: JSON.stringify({ id }),
     });
     removeFlight(id);
+  }
+
+  function toggleSelect(id: string) {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    );
   }
 
   async function handleReset() {
@@ -82,47 +91,76 @@ export default function AdminPage() {
         </div>
       )}
 
+      {/* Bulk action bar — sticky, appears when rows are selected */}
+      <BulkStatusBar selectedIds={selectedIds} onClear={() => setSelectedIds([])} />
+
       {/* Flight list */}
       <div className="px-6 py-4">
-        <div className="text-xs text-board-muted uppercase tracking-widest mb-3">
-          {flights.length} flights total
+        <div className="flex items-center gap-3 mb-3">
+          <span className="text-xs text-board-muted uppercase tracking-widest">
+            {flights.length} flights total
+          </span>
+          {selectedIds.length === 0 ? (
+            <button
+              onClick={() => setSelectedIds(flights.map((f) => f.id))}
+              className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
+            >
+              Select all
+            </button>
+          ) : (
+            <span className="text-xs text-amber-400">{selectedIds.length} selected</span>
+          )}
         </div>
 
         <div className="space-y-2">
-          {flights.map((flight) => (
-            <div
-              key={flight.id}
-              className="bg-board-row border border-board-border rounded px-4 py-3"
-            >
-              <div className="flex items-start justify-between gap-4 flex-wrap">
-                <div className="flex items-center gap-4 min-w-0">
-                  <span className="font-bold text-amber-300 text-sm shrink-0">
-                    {flight.flightNumber}
-                  </span>
-                  <span className="text-zinc-500 text-xs shrink-0">{flight.airline}</span>
-                  <span className="text-board-text text-sm truncate">{flight.destination}</span>
-                  <span className="text-amber-100 text-sm tabular-nums shrink-0">
-                    {flight.departureTime}
-                  </span>
-                  <span className="text-zinc-500 text-xs shrink-0">
-                    {flight.terminal} / {flight.gate}
-                  </span>
+          {flights.map((flight) => {
+            const isSelected = selectedIds.includes(flight.id);
+            return (
+              <div
+                key={flight.id}
+                className={`bg-board-row border rounded px-4 py-3 transition-colors ${
+                  isSelected ? 'border-amber-700 bg-amber-900/10' : 'border-board-border'
+                }`}
+              >
+                <div className="flex items-start justify-between gap-4 flex-wrap">
+                  <div className="flex items-center gap-3 min-w-0">
+                    {/* Selection checkbox */}
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleSelect(flight.id)}
+                      className="accent-amber-500 w-3.5 h-3.5 shrink-0 cursor-pointer"
+                      aria-label={`Select ${flight.flightNumber}`}
+                    />
+                    <span className="font-bold text-amber-300 text-sm shrink-0">
+                      {flight.flightNumber}
+                    </span>
+                    <span className="text-zinc-500 text-xs shrink-0">{flight.airline}</span>
+                    <span className="text-board-text text-sm truncate">{flight.destination}</span>
+                    <span className="text-amber-100 text-sm tabular-nums shrink-0">
+                      {flight.departureTime}
+                    </span>
+                    <span className="text-zinc-500 text-xs shrink-0">
+                      {flight.terminal} / {flight.gate}
+                    </span>
+                  </div>
+
+                  <button
+                    onClick={() => handleRemove(flight.id)}
+                    className="text-xs text-zinc-600 hover:text-red-400 transition-colors shrink-0"
+                    title="Remove flight"
+                  >
+                    ✕
+                  </button>
                 </div>
 
-                <button
-                  onClick={() => handleRemove(flight.id)}
-                  className="text-xs text-zinc-600 hover:text-red-400 transition-colors shrink-0"
-                  title="Remove flight"
-                >
-                  ✕
-                </button>
+                <div className="mt-2 flex flex-wrap items-end gap-4">
+                  <StatusControl flight={flight} />
+                  <DelayControl flight={flight} />
+                </div>
               </div>
-
-              <div className="mt-2">
-                <StatusControl flight={flight} />
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

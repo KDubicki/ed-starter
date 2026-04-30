@@ -7,8 +7,8 @@
     "departureTime": "06:05",
     "terminal": "T1",
     "gate": "A1",
-    "status": "On Time",
-    "delayMinutes": 30
+    "status": "Departed",
+    "delayMinutes": 1
   },
   {
     "id": "fl_r4nq",
@@ -80,7 +80,8 @@
     "departureTime": "10:10",
     "terminal": "T1",
     "gate": "A12",
-    "status": "Departed"
+    "status": "Departed",
+    "delayMinutes": 30
   },
   {
     "id": "fl_w1kg",
@@ -90,7 +91,7 @@
     "departureTime": "10:10",
     "terminal": "T2",
     "gate": "B7",
-    "status": "Departed"
+    "status": "Cancelled"
   },
   {
     "id": "fl_6eyz",
@@ -100,7 +101,7 @@
     "departureTime": "10:55",
     "terminal": "T2",
     "gate": "B9",
-    "status": "Delayed",
+    "status": "Departed",
     "delayMinutes": 15
   },
   {
@@ -111,7 +112,7 @@
     "departureTime": "11:30",
     "terminal": "T1",
     "gate": "A15",
-    "status": "On Time"
+    "status": "Departed"
   },
   {
     "id": "fl_hx8v",
@@ -121,7 +122,7 @@
     "departureTime": "12:20",
     "terminal": "T1",
     "gate": "A6",
-    "status": "On Time"
+    "status": "Departed"
   },
   {
     "id": "fl_s3na",
@@ -131,7 +132,7 @@
     "departureTime": "13:05",
     "terminal": "T2",
     "gate": "B5",
-    "status": "Delayed",
+    "status": "Departed",
     "delayMinutes": 30
   },
   {
@@ -142,7 +143,7 @@
     "departureTime": "13:05",
     "terminal": "T1",
     "gate": "A9",
-    "status": "On Time"
+    "status": "Departed"
   },
   {
     "id": "fl_c2mw",
@@ -152,7 +153,7 @@
     "departureTime": "14:40",
     "terminal": "T2",
     "gate": "B20",
-    "status": "On Time"
+    "status": "Departed"
   },
   {
     "id": "fl_p5tf",
@@ -172,7 +173,7 @@
     "departureTime": "15:50",
     "terminal": "T1",
     "gate": "A18",
-    "status": "On Time"
+    "status": "Departed"
   },
   {
     "id": "fl_v4le",
@@ -182,7 +183,7 @@
     "departureTime": "16:25",
     "terminal": "T1",
     "gate": "A20",
-    "status": "On Time"
+    "status": "Departed"
   },
   {
     "id": "fl_n8qc",
@@ -192,7 +193,7 @@
     "departureTime": "17:10",
     "terminal": "T2",
     "gate": "B15",
-    "status": "On Time"
+    "status": "Departed"
   },
   {
     "id": "fl_g1rb",
@@ -202,7 +203,18 @@
     "departureTime": "18:00",
     "terminal": "T1",
     "gate": "A7",
-    "status": "Delayed",
+    "status": "Departed",
     "delayMinutes": 10
+  },
+  {
+    "flightNumber": "aeawe",
+    "airline": "Lufthansa",
+    "destination": "london",
+    "departureTime": "12:00",
+    "terminal": "T1",
+    "gate": "A1",
+    "status": "Delayed",
+    "id": "1777581236086",
+    "delayMinutes": 1
   }
 ]

@@ -3,8 +3,10 @@
 import { useEffect } from 'react';
 import { FlightRow } from './FlightRow';
 import { LiveClock } from './LiveClock';
+import { StatsPanel } from './StatsPanel';
 import { useShallow } from 'zustand/react/shallow';
 import { useFlightsStore, selectFilteredFlights } from '@/store/flightsStore';
+import { useFlightStream } from '@/hooks/useFlightStream';
 import type { Flight, FlightStatus, Terminal } from '@/types';
 import { ALL_AIRLINES, ALL_STATUSES, ALL_TERMINALS } from '@/types';
 
@@ -15,6 +17,7 @@ interface FlightBoardProps {
 export function FlightBoard({ initialFlights }: FlightBoardProps) {
   const { filters, setFilter, setFlights } = useFlightsStore();
   const flights = useFlightsStore(useShallow(selectFilteredFlights));
+  const streamStatus = useFlightStream();
 
   useEffect(() => {
     setFlights(initialFlights);
@@ -32,8 +35,24 @@ export function FlightBoard({ initialFlights }: FlightBoardProps) {
             Flight Information Display
           </p>
         </div>
-        <LiveClock />
+        <div className="flex items-center gap-4">
+          <LiveClock />
+          <span
+            className={`text-xs font-bold uppercase tracking-widest px-2 py-0.5 rounded ${
+              streamStatus === 'live'
+                ? 'text-emerald-400 border border-emerald-800 bg-emerald-900/30 animate-pulse'
+                : streamStatus === 'error'
+                  ? 'text-red-500 border border-red-900'
+                  : 'text-zinc-600 border border-zinc-800'
+            }`}
+          >
+            {streamStatus === 'live' ? '● LIVE' : streamStatus === 'error' ? '✕ OFFLINE' : '○ …'}
+          </span>
+        </div>
       </header>
+
+      {/* Stats */}
+      <StatsPanel />
 
       {/* Filters */}
       <div className="bg-board-header border-b border-board-border px-6 py-3 flex flex-wrap gap-4 items-center">
