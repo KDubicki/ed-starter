@@ -7,6 +7,8 @@ import {
   notFoundResponse,
 } from '@/lib/apiResponse';
 
+// POST /api/flights/delay — set or clear delay on a specific flight
+// Body: { id: string, delayMinutes: number } — delayMinutes: 0 clears the delay
 export async function POST(request: Request) {
   const raw: unknown = await request.json();
   const parsed = delayFlightSchema.safeParse(raw);

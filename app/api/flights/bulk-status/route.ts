@@ -3,6 +3,8 @@ import { bulkStatusSchema } from '@/lib/validations';
 import { successResponse, errorResponse, validationErrorResponse } from '@/lib/apiResponse';
 import type { Flight, FlightStatus } from '@/types';
 
+// PATCH /api/flights/bulk-status — update status for multiple flights at once
+// Body: { ids: string[], status: FlightStatus }
 export async function PATCH(request: Request) {
   const raw: unknown = await request.json();
   const parsed = bulkStatusSchema.safeParse(raw);
@@ -27,7 +29,7 @@ export async function PATCH(request: Request) {
           status: typedStatus,
           delayMinutes: typedStatus !== 'Delayed' ? undefined : f.delayMinutes,
         }
-      : f
+      : f,
   );
 
   writeFlights(updated);

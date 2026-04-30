@@ -5,6 +5,7 @@ interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
+// GET /api/flights/:id — get single flight by id
 export async function GET(_request: Request, { params }: RouteContext) {
   const { id } = await params;
   const flights = readFlights();
@@ -17,6 +18,7 @@ export async function GET(_request: Request, { params }: RouteContext) {
   return successResponse(flight);
 }
 
+// DELETE /api/flights/:id — remove a flight by id (route param)
 export async function DELETE(_request: Request, { params }: RouteContext) {
   const { id } = await params;
   const flights = readFlights();
