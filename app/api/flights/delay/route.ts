@@ -1,41 +1,42 @@
-import { NextResponse } from 'next/server';
 import { readFlights, writeFlights } from '@/lib/flights';
+import { delayFlightSchema } from '@/lib/validations';
+import {
+  successResponse,
+  errorResponse,
+  validationErrorResponse,
+  notFoundResponse,
+} from '@/lib/apiResponse';
 
-// POST /api/flights/delay — set or clear delay on a specific flight
-// Body: { id: string, delayMinutes: number } — delayMinutes: 0 clears the delay
 export async function POST(request: Request) {
-  const body = (await request.json()) as { id: string; delayMinutes: number };
-  const { id, delayMinutes } = body;
+  const raw: unknown = await request.json();
+  const parsed = delayFlightSchema.safeParse(raw);
 
-  if (typeof delayMinutes !== 'number' || delayMinutes < 0) {
-    return NextResponse.json(
-      { error: 'delayMinutes must be a non-negative number' },
-      { status: 400 },
-    );
+  if (!parsed.success) {
+    return validationErrorResponse(parsed.error);
   }
 
+  const { id, delayMinutes } = parsed.data;
   const flights = readFlights();
   const index = flights.findIndex((f) => f.id === id);
 
   if (index === -1) {
-    return NextResponse.json({ error: 'Flight not found' }, { status: 404 });
+    return notFoundResponse('Flight');
   }
 
-  if (flights[index].status === 'Cancelled') {
-    return NextResponse.json(
-      { error: 'Cannot delay a cancelled flight' },
-      { status: 409 },
-    );
+  const flight = flights[index]!;
+
+  if (flight.status === 'Cancelled') {
+    return errorResponse('Cannot delay a cancelled flight', 409);
   }
 
   const clearing = delayMinutes === 0;
   flights[index] = {
-    ...flights[index],
+    ...flight,
     status: clearing ? 'On Time' : 'Delayed',
     delayMinutes: clearing ? undefined : delayMinutes,
   };
 
   writeFlights(flights);
 
-  return NextResponse.json(flights[index]);
+  return successResponse(flights[index]);
 }

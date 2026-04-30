@@ -9,7 +9,7 @@ function computeFlightStatus(flight: Flight): Flight {
   if (flight.status === 'Cancelled') return flight;
 
   const now = new Date();
-  const [h, m] = flight.departureTime.split(':').map(Number);
+  const [h = 0, m = 0] = flight.departureTime.split(':').map(Number);
   const depMinutes = h * 60 + m + (flight.delayMinutes ?? 0);
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
 

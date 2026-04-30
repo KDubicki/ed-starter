@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import Link from 'next/link';
 import { FlightRow } from './FlightRow';
 import { LiveClock } from './LiveClock';
 import { StatsPanel } from './StatsPanel';
@@ -126,12 +127,12 @@ export function FlightBoard({ initialFlights }: FlightBoardProps) {
 
       {/* Admin link */}
       <div className="fixed bottom-4 right-4">
-        <a
+        <Link
           href="/admin"
           className="text-xs text-board-muted hover:text-amber-400 transition-colors border border-board-border px-3 py-1.5 rounded bg-board-header"
         >
           Admin Panel →
-        </a>
+        </Link>
       </div>
     </div>
   );

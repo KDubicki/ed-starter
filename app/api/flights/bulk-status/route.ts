@@ -1,35 +1,37 @@
-import { NextResponse } from 'next/server';
 import { readFlights, writeFlights } from '@/lib/flights';
-import type { FlightStatus } from '@/types';
+import { bulkStatusSchema } from '@/lib/validations';
+import { successResponse, errorResponse, validationErrorResponse } from '@/lib/apiResponse';
+import type { Flight, FlightStatus } from '@/types';
 
-// PATCH /api/flights/bulk-status — update status for multiple flights at once
-// Body: { ids: string[], status: FlightStatus }
 export async function PATCH(request: Request) {
-  const body = (await request.json()) as { ids: string[]; status: FlightStatus };
-  const { ids, status } = body;
+  const raw: unknown = await request.json();
+  const parsed = bulkStatusSchema.safeParse(raw);
 
-  if (!Array.isArray(ids) || ids.length === 0) {
-    return NextResponse.json({ error: 'ids must be a non-empty array' }, { status: 400 });
+  if (!parsed.success) {
+    return validationErrorResponse(parsed.error);
   }
 
+  const { ids, status: newStatus } = parsed.data;
+  const typedStatus = newStatus as FlightStatus;
   const flights = readFlights();
   const missing = ids.filter((id) => !flights.some((f) => f.id === id));
 
   if (missing.length > 0) {
-    return NextResponse.json(
-      { error: 'Some flights not found', missing },
-      { status: 404 },
-    );
+    return errorResponse('Some flights not found', 404, { missing });
   }
 
-  const updated = flights.map((f) =>
+  const updated: Flight[] = flights.map((f) =>
     ids.includes(f.id)
-      ? { ...f, status, delayMinutes: status !== 'Delayed' ? undefined : f.delayMinutes }
-      : f,
+      ? {
+          ...f,
+          status: typedStatus,
+          delayMinutes: typedStatus !== 'Delayed' ? undefined : f.delayMinutes,
+        }
+      : f
   );
 
   writeFlights(updated);
 
   const affected = updated.filter((f) => ids.includes(f.id));
-  return NextResponse.json({ updated: affected, count: affected.length });
+  return successResponse({ updated: affected, count: affected.length });
 }
