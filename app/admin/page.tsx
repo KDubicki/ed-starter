@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useFlightsStore } from '@/store/flightsStore';
 import { StatusControl } from '@/components/admin/StatusControl';
 import { DelayControl } from '@/components/admin/DelayControl';
@@ -62,9 +63,9 @@ export default function AdminPage() {
             Admin Panel
           </h1>
           <p className="text-xs text-board-muted mt-0.5">
-            <a href="/" className="hover:text-amber-400 transition-colors">
+            <Link href="/" className="hover:text-amber-400 transition-colors">
               ← Back to FIDS
-            </a>
+            </Link>
           </p>
         </div>
         <div className="flex gap-3">

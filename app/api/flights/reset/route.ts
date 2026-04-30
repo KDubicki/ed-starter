@@ -1,7 +1,7 @@
-import { NextResponse } from 'next/server';
 import { resetToSeed } from '@/lib/flights';
+import { successResponse } from '@/lib/apiResponse';
 
 export async function POST() {
   const flights = resetToSeed();
-  return NextResponse.json(flights);
+  return successResponse(flights);
 }

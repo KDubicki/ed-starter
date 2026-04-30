@@ -1,46 +1,69 @@
-import { NextResponse } from 'next/server';
-import { readFlights, writeFlights, resetToSeed } from '@/lib/flights';
+import { readFlights, writeFlights } from '@/lib/flights';
+import { createFlightSchema, updateFlightSchema, deleteFlightSchema } from '@/lib/validations';
+import { successResponse, validationErrorResponse, notFoundResponse } from '@/lib/apiResponse';
 import type { Flight } from '@/types';
 
 export async function GET() {
   const flights = readFlights();
-  return NextResponse.json(flights);
+  return successResponse(flights);
 }
 
-// PATCH /api/flights — update a single flight by id
-// Body: { id: string, ...partialFlight }
-// NOTE: No input validation by design — exercise material for 01.04
 export async function PATCH(request: Request) {
-  const body = (await request.json()) as { id: string } & Partial<Flight>;
-  const { id, ...updates } = body;
+  const raw: unknown = await request.json();
+  const parsed = updateFlightSchema.safeParse(raw);
 
+  if (!parsed.success) {
+    return validationErrorResponse(parsed.error);
+  }
+
+  const { id, ...updates } = parsed.data;
   const flights = readFlights();
   const index = flights.findIndex((f) => f.id === id);
 
   if (index === -1) {
-    return NextResponse.json({ error: 'Flight not found' }, { status: 404 });
+    return notFoundResponse('Flight');
   }
 
-  flights[index] = { ...flights[index], ...updates };
+  flights[index] = { ...flights[index], ...updates } as Flight;
   writeFlights(flights);
 
-  return NextResponse.json(flights[index]);
+  return successResponse(flights[index]);
 }
 
-// POST /api/flights — add a new flight
 export async function POST(request: Request) {
-  const flight = (await request.json()) as Flight;
+  const raw: unknown = await request.json();
+  const parsed = createFlightSchema.safeParse(raw);
+
+  if (!parsed.success) {
+    return validationErrorResponse(parsed.error);
+  }
+
+  const flight = parsed.data as Flight;
   const flights = readFlights();
   flights.push(flight);
   writeFlights(flights);
-  return NextResponse.json(flight, { status: 201 });
+
+  return successResponse(flight, 201);
 }
 
-// DELETE /api/flights — remove a flight by id
 export async function DELETE(request: Request) {
-  const { id } = (await request.json()) as { id: string };
+  const raw: unknown = await request.json();
+  const parsed = deleteFlightSchema.safeParse(raw);
+
+  if (!parsed.success) {
+    return validationErrorResponse(parsed.error);
+  }
+
+  const { id } = parsed.data;
   const flights = readFlights();
+  const index = flights.findIndex((f) => f.id === id);
+
+  if (index === -1) {
+    return notFoundResponse('Flight');
+  }
+
   const updated = flights.filter((f) => f.id !== id);
   writeFlights(updated);
-  return NextResponse.json({ success: true });
+
+  return successResponse({ success: true });
 }
