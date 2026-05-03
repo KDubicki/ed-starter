@@ -21,7 +21,7 @@ export async function GET(request: Request) {
       (f) =>
         f.flightNumber.toLowerCase().includes(q) ||
         f.destination.toLowerCase().includes(q) ||
-        f.gate.toLowerCase().includes(q),
+        f.gate.toLowerCase().includes(q)
     );
   }
 

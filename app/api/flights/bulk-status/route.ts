@@ -29,7 +29,7 @@ export async function PATCH(request: Request) {
           status: typedStatus,
           delayMinutes: typedStatus !== 'Delayed' ? undefined : f.delayMinutes,
         }
-      : f,
+      : f
   );
 
   writeFlights(updated);

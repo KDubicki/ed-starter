@@ -1,4 +1,4 @@
-import nextConfig from "eslint-config-next";
+import nextConfig from 'eslint-config-next';
 
 const config = [...nextConfig];
 

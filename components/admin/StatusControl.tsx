@@ -59,9 +59,7 @@ export function StatusControl({ flight }: StatusControlProps) {
             type="number"
             value={delay}
             onChange={(e) => setDelay(e.target.value)}
-            onBlur={() =>
-              changeStatus('Delayed')
-            }
+            onBlur={() => changeStatus('Delayed')}
             min={0}
             max={999}
             className="w-16 bg-zinc-800 border border-zinc-700 text-orange-300 text-xs px-2 py-1 rounded text-center focus:outline-none focus:border-orange-600"

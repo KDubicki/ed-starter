@@ -11,7 +11,7 @@ export async function GET() {
       acc[f.status] = (acc[f.status] ?? 0) + 1;
       return acc;
     },
-    {} as Record<FlightStatus, number>,
+    {} as Record<FlightStatus, number>
   );
 
   const byTerminal = flights.reduce<Record<Terminal, number>>(
@@ -19,7 +19,7 @@ export async function GET() {
       acc[f.terminal] = (acc[f.terminal] ?? 0) + 1;
       return acc;
     },
-    {} as Record<Terminal, number>,
+    {} as Record<Terminal, number>
   );
 
   const byAirline = flights.reduce<Record<Airline, number>>(
@@ -27,7 +27,7 @@ export async function GET() {
       acc[f.airline] = (acc[f.airline] ?? 0) + 1;
       return acc;
     },
-    {} as Record<Airline, number>,
+    {} as Record<Airline, number>
   );
 
   const delayed = flights.filter((f) => f.status === 'Delayed');
