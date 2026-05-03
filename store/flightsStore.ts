@@ -40,8 +40,7 @@ export const useFlightsStore = create<FlightsStore>((set) => ({
 
   addFlight: (flight) => set((state) => ({ flights: [...state.flights, flight] })),
 
-  removeFlight: (id) =>
-    set((state) => ({ flights: state.flights.filter((f) => f.id !== id) })),
+  removeFlight: (id) => set((state) => ({ flights: state.flights.filter((f) => f.id !== id) })),
 
   resetFlights: (flights) => set({ flights }),
 }));

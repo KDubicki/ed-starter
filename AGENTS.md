@@ -18,32 +18,32 @@
 
 ## Project Structure
 
-| Katalog | Opis |
-|---------|------|
-| `app/` | Next.js App Router — strony, layouty, API routes. Każdy `page.tsx` to Server Component pobierający dane. |
-| `app/api/` | REST API – endpointy CRUD dla lotów. Pełna lista poniżej. |
-| `components/` | Komponenty UI pogrupowane domenowo: `fids/` (tablica lotów), `admin/` (panel edycji). |
-| `data/` | Pliki JSON — `flights.json` (źródło bieżących danych), `flights.seed.json` (dane startowe do resetu). |
-| `lib/` | Logika biznesowa i utility — operacje na plikach lotów (`flights.ts`), helper `cn()` (`utils.ts`). |
-| `store/` | Zustand store — stan kliencki, filtry, akcje CRUD na lotach. |
-| `types/` | Współdzielone typy TypeScript — `Flight`, `FlightStatus`, `Airline`, `Terminal` + stałe. |
+| Katalog       | Opis                                                                                                     |
+| ------------- | -------------------------------------------------------------------------------------------------------- |
+| `app/`        | Next.js App Router — strony, layouty, API routes. Każdy `page.tsx` to Server Component pobierający dane. |
+| `app/api/`    | REST API – endpointy CRUD dla lotów. Pełna lista poniżej.                                                |
+| `components/` | Komponenty UI pogrupowane domenowo: `fids/` (tablica lotów), `admin/` (panel edycji).                    |
+| `data/`       | Pliki JSON — `flights.json` (źródło bieżących danych), `flights.seed.json` (dane startowe do resetu).    |
+| `lib/`        | Logika biznesowa i utility — operacje na plikach lotów (`flights.ts`), helper `cn()` (`utils.ts`).       |
+| `store/`      | Zustand store — stan kliencki, filtry, akcje CRUD na lotach.                                             |
+| `types/`      | Współdzielone typy TypeScript — `Flight`, `FlightStatus`, `Airline`, `Terminal` + stałe.                 |
 
 ### API Endpoints
 
-| Metoda | Ścieżka | Opis |
-|--------|---------|------|
-| `GET` | `/api/flights` | Lista wszystkich lotów (z przeliczonym statusem) |
-| `POST` | `/api/flights` | Dodaj nowy lot |
-| `PATCH` | `/api/flights` | Zaktualizuj pojedynczy lot wg `id` w body |
-| `DELETE` | `/api/flights` | Usuń lot wg `id` w body |
-| `GET` | `/api/flights/:id` | Pobierz jeden lot wg id z URL |
-| `DELETE` | `/api/flights/:id` | Usuń lot wg id z URL |
-| `GET` | `/api/flights/search?q=&terminal=&status=&airline=` | Full-text search + filtry |
-| `GET` | `/api/flights/stats` | Statystyki: liczby wg statusu / terminala / airline, śr. opóźnienie |
-| `PATCH` | `/api/flights/bulk-status` | Masowa zmiana statusu wielu lotów naraz |
-| `POST` | `/api/flights/delay` | Ustaw lub skasuj opóźnienie (`delayMinutes: 0` czyści) |
-| `POST` | `/api/flights/reset` | Przywróć dane z `flights.seed.json` |
-| `GET` | `/api/flights/stream` | **SSE** – live push aktualizacji co 5 s (bez pollingu) |
+| Metoda   | Ścieżka                                             | Opis                                                                |
+| -------- | --------------------------------------------------- | ------------------------------------------------------------------- |
+| `GET`    | `/api/flights`                                      | Lista wszystkich lotów (z przeliczonym statusem)                    |
+| `POST`   | `/api/flights`                                      | Dodaj nowy lot                                                      |
+| `PATCH`  | `/api/flights`                                      | Zaktualizuj pojedynczy lot wg `id` w body                           |
+| `DELETE` | `/api/flights`                                      | Usuń lot wg `id` w body                                             |
+| `GET`    | `/api/flights/:id`                                  | Pobierz jeden lot wg id z URL                                       |
+| `DELETE` | `/api/flights/:id`                                  | Usuń lot wg id z URL                                                |
+| `GET`    | `/api/flights/search?q=&terminal=&status=&airline=` | Full-text search + filtry                                           |
+| `GET`    | `/api/flights/stats`                                | Statystyki: liczby wg statusu / terminala / airline, śr. opóźnienie |
+| `PATCH`  | `/api/flights/bulk-status`                          | Masowa zmiana statusu wielu lotów naraz                             |
+| `POST`   | `/api/flights/delay`                                | Ustaw lub skasuj opóźnienie (`delayMinutes: 0` czyści)              |
+| `POST`   | `/api/flights/reset`                                | Przywróć dane z `flights.seed.json`                                 |
+| `GET`    | `/api/flights/stream`                               | **SSE** – live push aktualizacji co 5 s (bez pollingu)              |
 
 ---
 
@@ -67,6 +67,7 @@ npm run build
 ```
 
 Przed każdym commitem uruchom sekwencję:
+
 ```bash
 npm run typecheck && npm run lint && npm run build
 ```
